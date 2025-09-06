@@ -26,44 +26,79 @@ public class TutoringSessionList implements ITutoringSession {
     }
     
     @Override
-    public void createTutoringSession(Tutor tutor, int subjectId, String dateStr, String timeStr, int duration, int capacity) {
-        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        LocalTime start = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
-
-        if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
-        if (duration <= 0) throw new IllegalArgumentException("Duration must be positive");
-        if (date.isBefore(LocalDate.now())) throw new IllegalArgumentException("Session date cannot be in the past");
-
-        Subject subject = subjectRepo.findById(subjectId);
-        if (subject == null) throw new IllegalArgumentException("Invalid subject ID");
-
-        int sessionId = generateNextSessionId();
-        TutoringSession session = new TutoringSession(
-                sessionId, capacity, capacity,
-                date.toString(), start.toString(),
-                duration, subject, tutor
-        );
-
-        sessionRepo.addSession(session);
-    }
+    public TutoringSession createTutoringSession(Tutor tutor, Subject subject,
+            LocalDate date, LocalTime startTime,
+            int duration, int capacity) {
+		// Check overlap
+		List<TutoringSession> tutorSessions = sessionRepo.loadAllSessions().stream()
+		.filter(s -> s.getTutor().getUserID() == tutor.getUserID())
+		.filter(s -> s.getDate().equals(date))
+		.toList();
+		
+		LocalTime endTime = startTime.plusMinutes(duration);
+		
+		for (TutoringSession s : tutorSessions) {
+			LocalTime sEnd = s.getStartTime().plusMinutes(s.getDuration());
+			boolean overlap = !(endTime.isBefore(s.getStartTime()) || startTime.isAfter(sEnd));
+			if (overlap) {
+			throw new IllegalArgumentException(
+				"Overlap detected with session ID " + s.getTutoringSessionID());
+			}
+		}
+		
+		// Create new session
+		TutoringSession session = new TutoringSession(
+			generateNextSessionId(),
+			capacity,
+			capacity,
+			date.toString(),
+			startTime.toString(),
+			duration,
+			subject,
+			tutor
+		);
+		
+		sessionRepo.addSession(session);
+		return session;
+	}
 
     @Override
-    public void editSession(Tutor tutor, int sessionId, String dateStr, String timeStr, int duration, int capacity) {
+    public void editSession(Tutor tutor, int sessionId, LocalDate date, LocalTime startTime,int duration, int capacity) {
         TutoringSession existing = sessionRepo.findById(sessionId);
         if (existing == null) throw new IllegalArgumentException("Session not found");
         if (existing.getTutor().getUserID() != tutor.getUserID())
             throw new IllegalArgumentException("You can only edit your own sessions");
 
-        LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        LocalTime start = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
-
         if (capacity <= 0) throw new IllegalArgumentException("Capacity must be positive");
         if (duration <= 0) throw new IllegalArgumentException("Duration must be positive");
 
+        // --- Overlap check ---
+        LocalTime endTime = startTime.plusMinutes(duration);
+        List<TutoringSession> tutorSessions = sessionRepo.loadAllSessions().stream()
+                .filter(s -> s.getTutor().getUserID() == tutor.getUserID())
+                .filter(s -> s.getDate().equals(date))
+                .filter(s -> s.getTutoringSessionID() != sessionId) // exclude current session
+                .toList();
+
+        for (TutoringSession s : tutorSessions) {
+            LocalTime sEnd = s.getStartTime().plusMinutes(s.getDuration());
+            boolean overlap = !(endTime.isBefore(s.getStartTime()) || startTime.isAfter(sEnd));
+            if (overlap) {
+                throw new IllegalArgumentException(
+                        "Overlap detected with session ID " + s.getTutoringSessionID());
+            }
+        }
+
+        // --- Build updated session ---
         TutoringSession updated = new TutoringSession(
-                existing.getTutoringSessionID(), existing.getAvailableCapacity(), capacity,
-                date.toString(), start.toString(),
-                duration, existing.getSubject(), tutor
+                existing.getTutoringSessionID(),
+                existing.getAvailableCapacity(), // preserve current bookings
+                capacity,
+                date.toString(),
+                startTime.toString(),
+                duration,
+                existing.getSubject(),
+                tutor
         );
 
         sessionRepo.updateSession(updated);

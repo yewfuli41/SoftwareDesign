@@ -160,54 +160,64 @@ public class TutoringApp {
     }
 
     private void createTutoringSession(Scanner scanner, User user) {
-        displaySessions(user); // show existing sessions
-
-        System.out.print("Enter subject ID: ");
-        int subjectId = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter date (dd-MM-yyyy): ");
-        String dateStr = scanner.nextLine();
-
-        System.out.print("Enter start time (HH:mm): ");
-        String timeStr = scanner.nextLine();
-
-        System.out.print("Enter duration (minutes): ");
-        int duration = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter capacity: ");
-        int capacity = Integer.parseInt(scanner.nextLine());
-
         try {
-            tutoringSessionList.createTutoringSession((Tutor) user, subjectId, dateStr, timeStr, duration, capacity);
-            System.out.println("Session created successfully!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            // Gather inputs
+            System.out.print("Enter subject name: ");
+            String subjectName = scanner.nextLine();
+            Subject subject = new Subject(0, subjectName, "");
+
+            System.out.print("Enter session date (dd-MM-yyyy): ");
+            LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+            System.out.print("Enter start time (HH:mm): ");
+            LocalTime startTime = LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+
+            System.out.print("Enter duration (minutes): ");
+            int duration = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.print("Enter capacity: ");
+            int capacity = scanner.nextInt();
+            scanner.nextLine();
+
+            // Call domain service
+            TutoringSession session = tutoringSessionList.createTutoringSession(
+                    (Tutor) user, subject, date, startTime, duration, capacity
+            );
+
+            System.out.println("Session created: " + formatSession(session));
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void editTutoringSession(Scanner scanner, User user) {
         displaySessions(user);
 
-        System.out.print("Enter session ID to edit: ");
-        int sessionId = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter new date (dd-MM-yyyy): ");
-        String dateStr = scanner.nextLine();
-
-        System.out.print("Enter new start time (HH:mm): ");
-        String timeStr = scanner.nextLine();
-
-        System.out.print("Enter new duration (minutes): ");
-        int duration = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Enter new capacity: ");
-        int capacity = Integer.parseInt(scanner.nextLine());
-
         try {
-            tutoringSessionList.editSession((Tutor) user, sessionId, dateStr, timeStr, duration, capacity);
+            System.out.print("Enter session ID to edit: ");
+            int sessionId = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter new date (dd-MM-yyyy): ");
+            LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+            System.out.print("Enter new start time (HH:mm): ");
+            LocalTime startTime = LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+
+            System.out.print("Enter new duration (minutes): ");
+            int duration = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter new capacity: ");
+            int capacity = Integer.parseInt(scanner.nextLine());
+
+            tutoringSessionList.editSession((Tutor) user, sessionId, date, startTime, duration, capacity);
+
             System.out.println("Session updated successfully!");
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Invalid input: " + e.getMessage());
         }
     }
 
@@ -216,45 +226,53 @@ public class TutoringApp {
 
         System.out.print("Enter session ID to cancel: ");
         int sessionId = Integer.parseInt(scanner.nextLine());
+        
+        // Check if session exists first hand
+        TutoringSession session = tutoringSessionList.getSessionById(sessionId);
+        if (session == null) {
+            System.out.println("No session found with ID: " + sessionId);
+            return;
+        }
 
         try {
             tutoringSessionList.cancelSession((Tutor) user, sessionId);
-            System.out.println("✅ Session canceled successfully!");
+            System.out.println("Session canceled successfully!");
         } catch (IllegalArgumentException e) {
-            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
     
     private void displaySessions(User user) {
-    	List<TutoringSession> sessions = sessionRepo.loadAllSessions();
-    	if (ul.isStudent(user)) {
-            // Student: show all available sessions
-            System.out.println("Available Tutoring Sessions:");
-            sessions.stream()
-                .filter(s -> s.getAvailableCapacity() > 0)
-                .forEach(s -> {
-                    System.out.println("Session ID: " + s.getTutoringSessionID() +
-                                       ", Date: " + s.getDate() +
-                                       ", Time: " + s.getStartTime() +
-                                       ", Subject: " + s.getSubject().getSubjectName() +
-                                       ", Tutor: " + s.getTutor().getName() +
-                                       ", Available: " + s.getAvailableCapacity());
-                });
+        System.out.println("\n--- Available Sessions ---");
+
+        if (ul.isStudent(user)) {
+            // Student: show all sessions
+            tutoringSessionList.getAllSessions()
+                    .forEach(s -> System.out.println(formatSession(s)));
 
         } else if (ul.isTutor(user)) {
-            // Tutor: show only their sessions
-            System.out.println("Your Tutoring Sessions:");
-            sessions.stream()
-                .filter(s -> s.getTutor().getUserID() == user.getUserID())
-                .forEach(s -> {
-                    System.out.println("Session ID: " + s.getTutoringSessionID() +
-                                       ", Date: " + s.getDate() +
-                                       ", Time: " + s.getStartTime() +
-                                       ", Subject: " + s.getSubject().getSubjectName() +
-                                       ", Capacity: " + s.getCapacity() +
-                                       ", Available: " + s.getAvailableCapacity());
-                });
-            }
+            // Tutor: show only their own sessions
+            tutoringSessionList.getSessionsByTutor(user.getUserID())
+                    .forEach(s -> System.out.println(formatSession(s)));
+
+        } 
+    }
+
+    /**
+     * Format session details for display
+     */
+    private String formatSession(TutoringSession s) {
+        return String.format(
+                "ID: %d | Tutor: %s | Subject: %s | Date: %s | Start: %s | Duration: %d min | Capacity: %d/%d",
+                s.getTutoringSessionID(),
+                s.getTutor().getName(),
+                s.getSubject().getSubjectName(),
+                s.getDate(),
+                s.getStartTime(),
+                s.getDuration(),
+                s.getAvailableCapacity(),
+                s.getCapacity()
+        );
     }
 
     // ---------------- Student Booking ----------------
