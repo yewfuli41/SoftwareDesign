@@ -1,6 +1,10 @@
+
 package tutoring.domain;
+
 import java.util.ArrayList;
+
 public interface IBooking {
+    
     // Book a tutoring session
     Booking bookingSession(TutoringSession session);
     
@@ -16,3 +20,4 @@ public interface IBooking {
     // Retrieve bookings for a specific student
     ArrayList<Booking> getBookings(Student student);
 }
+

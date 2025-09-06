@@ -1,3 +1,4 @@
+
 package tutoring.domain;
 import java.util.ArrayList;
 public class Student extends User{
@@ -21,3 +22,4 @@ public class Student extends User{
 		this.sessionsAttended = sessionsAttended;
 	}
 }
+

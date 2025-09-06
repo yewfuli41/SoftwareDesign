@@ -1,3 +1,9 @@
+
+/*
+ Author: LSun
+ Class description: no plans for managing Subject.txt, will hard code
+ */
+
 package tutoring.domain;
 
 public class Subject {
@@ -30,3 +36,4 @@ public class Subject {
 	
 	
 }
+

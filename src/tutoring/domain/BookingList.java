@@ -1,13 +1,16 @@
-package tutoring.domain;
-import java.util.ArrayList;
-public class BookingList implements IBooking{
-	private ArrayList<Booking> bookings;
-	
-	public BookingList() {
-		this.bookings = new ArrayList<Booking>();
-	}
 
-	/// Book a tutoring session
+package tutoring.domain;
+
+import java.util.ArrayList;
+
+public class BookingList implements IBooking {
+    private ArrayList<Booking> bookings;
+
+    public BookingList() {
+        this.bookings = new ArrayList<>();
+    }
+
+    /// Book a tutoring session
     @Override
     public Booking bookingSession(TutoringSession session)
     {
@@ -81,3 +84,4 @@ public class BookingList implements IBooking{
         return bookings;
     }
 }
+
