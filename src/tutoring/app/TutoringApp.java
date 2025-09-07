@@ -79,10 +79,10 @@ public class TutoringApp {
 	
 	            switch (choice) {
 	                case 1:
-	                    createTutoringSession(scanner, currentUser);
+	                    createTutoringSession(scanner,(Tutor) currentUser);
 	                    break;
 	                case 2:
-	                	tutorMenu(scanner, currentUser);
+	                	tutorMenu(scanner,(Tutor) currentUser);
 	                    break;
 	                case 3:
 	                    //profileManage(scanner, currentUser);
@@ -129,13 +129,12 @@ public class TutoringApp {
     }
 
     // ---------------- Tutor Menu ----------------
-    private void tutorMenu(Scanner scanner, User user) {
+    private void tutorMenu(Scanner scanner, Tutor tutor) {
         int choice;
         do {
             System.out.println("\n--- Manage Sessions ---");
-            System.out.println("1. Create Session");
-            System.out.println("2. Edit Session");
-            System.out.println("3. Cancel Session");
+            System.out.println("1. Edit Session");
+            System.out.println("2. Cancel Session");
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -143,13 +142,10 @@ public class TutoringApp {
 
             switch (choice) {
                 case 1:
-                    createTutoringSession(scanner, user);
+                	editTutoringSession(scanner, tutor);
                     break;
                 case 2:
-                    editTutoringSession(scanner, user);
-                    break;
-                case 3:
-                    cancelTutoringSession(scanner, user);
+                	cancelTutoringSession(scanner, tutor);
                     break;
                 case 0:
                     break;
@@ -159,9 +155,9 @@ public class TutoringApp {
         } while (choice != 0);
     }
 
-    private void createTutoringSession(Scanner scanner, User user) {
+    private void createTutoringSession(Scanner scanner, Tutor tutor) {
         try {
-            // Gather inputs
+            // Gather inputs	
             System.out.print("Enter subject name: ");
             String subjectName = scanner.nextLine();
             Subject subject = new Subject(0, subjectName, "");
@@ -182,7 +178,7 @@ public class TutoringApp {
 
             // Call domain service
             TutoringSession session = tutoringSessionList.createTutoringSession(
-                    (Tutor) user, subject, date, startTime, duration, capacity
+            		tutor, subject, date, startTime, duration, capacity
             );
 
             System.out.println("Session created: " + formatSession(session));
@@ -192,8 +188,8 @@ public class TutoringApp {
         }
     }
 
-    private void editTutoringSession(Scanner scanner, User user) {
-        displaySessions(user);
+    private void editTutoringSession(Scanner scanner, Tutor tutor) {
+        displaySessions(tutor);
 
         try {
             System.out.print("Enter session ID to edit: ");
@@ -211,7 +207,7 @@ public class TutoringApp {
             System.out.print("Enter new capacity: ");
             int capacity = Integer.parseInt(scanner.nextLine());
 
-            tutoringSessionList.editSession((Tutor) user, sessionId, date, startTime, duration, capacity);
+            tutoringSessionList.editSession(tutor, sessionId, date, startTime, duration, capacity);
 
             System.out.println("Session updated successfully!");
         } catch (IllegalArgumentException e) {
@@ -221,8 +217,8 @@ public class TutoringApp {
         }
     }
 
-    private void cancelTutoringSession(Scanner scanner, User user) {
-        displaySessions(user);
+    private void cancelTutoringSession(Scanner scanner, Tutor tutor) {
+        displaySessions(tutor);
 
         System.out.print("Enter session ID to cancel: ");
         int sessionId = Integer.parseInt(scanner.nextLine());
@@ -235,7 +231,7 @@ public class TutoringApp {
         }
 
         try {
-            tutoringSessionList.cancelSession((Tutor) user, sessionId);
+            tutoringSessionList.cancelSession((Tutor) tutor, sessionId);
             System.out.println("Session canceled successfully!");
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
