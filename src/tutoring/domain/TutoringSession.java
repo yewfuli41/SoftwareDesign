@@ -32,7 +32,7 @@ public class TutoringSession {
             String dateStr, String startTimeStr, int duration,
             Subject subject, Tutor tutor) {
 
-		DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // match your input
+		DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
 		
 		if (duration <= 0) {

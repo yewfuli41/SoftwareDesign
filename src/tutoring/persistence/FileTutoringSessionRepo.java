@@ -14,8 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FileTutoringSessionRepo implements ITutoringSessionRepo {
-    private String sessionFile = "TutoringSessionData.txt";
-
     private final IUserRepo userRepo;
     private final ISubjectRepo subjectRepo;
 
