@@ -7,8 +7,8 @@ public abstract class User {
 	private String password;
 	public User(String name, String email, String password) {
 		this.name = name;
-		this.email = email;
-		this.password = password;
+		setEmail(email);
+		setPassword(password);
 	}
 	public abstract int getUserID();
 	public abstract void setUserID(int userID);
@@ -28,10 +28,12 @@ public abstract class User {
 			throw new IllegalArgumentException("No @ in the email");
 		else if (atIndex == 0)
         	throw new IllegalArgumentException("No characters before @ in the email");
-        else if (dotIndex == email.length() - 1) 
+        else if (dotIndex == - 1) 
         	throw new IllegalArgumentException("No . in the email");
         else if (dotIndex < atIndex + 2)
         	throw new IllegalArgumentException("No characters in between @ and .");
+        else if (dotIndex == email.length() - 1)
+        	throw new IllegalArgumentException("No characters after .");
         else
         	this.email = email;
 	}

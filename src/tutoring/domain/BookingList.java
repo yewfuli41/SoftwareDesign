@@ -3,11 +3,17 @@ package tutoring.domain;
 
 import java.util.ArrayList;
 
-public class BookingList implements IBooking {
-    private ArrayList<Booking> bookings;
+import tutoring.persistence.IBookingRepo;
+import tutoring.persistence.RepoMain;
 
+public class BookingList implements IBooking {
+	RepoMain factory;
+    private ArrayList<Booking> bookings;
+    private final IBookingRepo bookingRepo;
     public BookingList() {
+    	this.factory = new RepoMain();
         this.bookings = new ArrayList<>();
+        this.bookingRepo = factory.getBookingRepo();
     }
 
     /// Book a tutoring session
@@ -43,6 +49,7 @@ public class BookingList implements IBooking {
         {
             booking.setStatus("Confirmed");
         }
+        
     }
 
     // Edit a booking

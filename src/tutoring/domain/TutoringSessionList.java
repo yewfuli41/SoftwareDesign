@@ -6,13 +6,17 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import tutoring.persistence.*;
+
 public class TutoringSessionList implements ITutoringSession {
+	RepoMain factory;
     private final ITutoringSessionRepo sessionRepo;
     private final ISubjectRepo subjectRepo;
 
-    public TutoringSessionList(ITutoringSessionRepo sessionRepo, ISubjectRepo subjectRepo) {
-        this.sessionRepo = sessionRepo;
-        this.subjectRepo = subjectRepo;
+    public TutoringSessionList() {
+    	this.factory = new RepoMain();
+        this.sessionRepo = factory.getSessionRepo();
+        this.subjectRepo = factory.getSubjectRepo();
     }
 
     public int generateNextSessionId() {

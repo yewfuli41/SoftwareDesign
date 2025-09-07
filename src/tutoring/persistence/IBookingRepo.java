@@ -1,7 +1,7 @@
-package tutoring.domain;
+package tutoring.persistence;
 
 import java.util.List;
-
+import tutoring.domain.*;
 public interface IBookingRepo {
     List<Booking> loadAllBookings();
     Booking findById(int bookingId);

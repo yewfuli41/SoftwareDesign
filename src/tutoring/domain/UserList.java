@@ -2,13 +2,16 @@
 package tutoring.domain;
 
 import java.util.List;
+import tutoring.persistence.*;
 
 public class UserList implements IUser {
+	RepoMain factory;
     private final IUserRepo userRepo;
     private List<User> users;
 
-    public UserList(IUserRepo userRepo) {
-        this.userRepo = userRepo;
+    public UserList() {
+    	this.factory = new RepoMain();
+        this.userRepo = factory.getUserRepo();
         this.users = userRepo.findAll();
     }
 
@@ -34,33 +37,52 @@ public class UserList implements IUser {
         return user instanceof Student;
     }
 
-    public void addUser(User user) {
-        users.add(user);
+    public void addUser(String name,String email,String password,String type) {
+    	int newId = users.size() + 1; // simple auto-id
+		User newUser;
+		if ("Tutor".equalsIgnoreCase(type)) {
+			newUser = new Tutor(name, email, password, newId);
+		} else if("Student".equalsIgnoreCase(type)){
+			newUser = new Student(name, email, password, newId);
+		}else {
+			throw new IllegalArgumentException("Invalid user type.");
+		}
+        users.add(newUser);
         userRepo.saveAll(users);
     }
     public void updateUser(User user) {
-		for(int i=0;i<users.size();i++) 
-			if(user == users.get(i))
+		for(int i=0;i<users.size();i++) {
+			if(users.get(i).getUserID()==user.getUserID()) {
 				users.set(i, user);
+				break;
+			}
+		}
+		userRepo.saveAll(users);
 	}
     public void removeUser(User user) {
         users.remove(user);
         userRepo.saveAll(users);
     }
-    public User findUserByName(String name) 
-    {
-        for(User u : users) 
-        {
-            if(u.getName().equals(name)) return u;
-        }
-        return null;
-    }
     public boolean checkPassword(String password) {
     	for(int i=0;i<users.size();i++) 
-    		if(users.get(i).getPassword()==password)
+    		if(users.get(i).getPassword().equals(password))
     			return true;
     	return false;
 
+    }
+    @Override
+    public User findByEmail(String email) {
+        for (User u : users) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                return u;
+            }
+        }
+        return null;
+    }
+    public void checkDuplicateEmail(String email) {
+    	if (findByEmail(email) != null) {
+			throw new IllegalArgumentException("Email already exists!");
+		}
     }
 }
 

@@ -14,16 +14,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FileTutoringSessionRepo implements ITutoringSessionRepo {
-    //private String sessionFile = "TutoringSessionData.txt";
-	private String sessionFile;
+    private String sessionFile = "TutoringSessionData.txt";
 
     private final IUserRepo userRepo;
     private final ISubjectRepo subjectRepo;
 
-    public FileTutoringSessionRepo(IUserRepo userRepo, ISubjectRepo subjectRepo, String sessionFile) {
+    public FileTutoringSessionRepo(IUserRepo userRepo, ISubjectRepo subjectRepo) {
         this.userRepo = userRepo;
         this.subjectRepo = subjectRepo;
-        this.sessionFile = sessionFile;
     }
 
     @Override

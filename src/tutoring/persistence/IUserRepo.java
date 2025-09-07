@@ -1,6 +1,10 @@
-package tutoring.domain;
+package tutoring.persistence;
 
 import java.util.List;
+
+import tutoring.domain.Student;
+import tutoring.domain.Tutor;
+import tutoring.domain.User;
 
 public interface IUserRepo {
     User findById(int id);
