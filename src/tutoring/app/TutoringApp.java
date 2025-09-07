@@ -60,6 +60,8 @@ public class TutoringApp {
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Please enter a valid number!");
+			} catch (IllegalArgumentException ex) {
+				System.out.println(ex.getMessage());
 			}
 		}
 
