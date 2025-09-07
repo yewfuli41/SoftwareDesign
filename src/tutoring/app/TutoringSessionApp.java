@@ -20,13 +20,12 @@ public class TutoringSessionApp {
 		sessions = tutoringSessionList.getAllSessions();
 	}
 	// ---------------- Tutor Menu ----------------
-    public void tutorMenu(User user) {
+    public void tutorMenu(Tutor tutor) {
         int choice;
         do {
             System.out.println("\n--- Manage Sessions ---");
-            System.out.println("1. Create Session");
-            System.out.println("2. Edit Session");
-            System.out.println("3. Cancel Session");
+            System.out.println("1. Edit Session");
+            System.out.println("2. Cancel Session");
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
             choice = scanner.nextInt();
@@ -34,13 +33,10 @@ public class TutoringSessionApp {
 
             switch (choice) {
                 case 1:
-                    createTutoringSession(user);
+                    editTutoringSession(tutor);
                     break;
                 case 2:
-                    editTutoringSession(user);
-                    break;
-                case 3:
-                    cancelTutoringSession(user);
+                    cancelTutoringSession(tutor);
                     break;
                 case 0:
                     break;
@@ -49,7 +45,7 @@ public class TutoringSessionApp {
             }
         } while (choice != 0);
     }
-	public void createTutoringSession(User user) {
+	public void createTutoringSession(Tutor tutor) {
 		try {
 			// Gather inputs
 			System.out.print("Enter subject name: ");
@@ -72,7 +68,7 @@ public class TutoringSessionApp {
 
 	        // Call domain service
 	        TutoringSession session = tutoringSessionList.createTutoringSession(
-	        		(Tutor) user, subject, date, startTime, duration, capacity
+	        		tutor, subject, date, startTime, duration, capacity
 	        );
 
 	        System.out.println("Session created: " + formatSession(session));
@@ -82,8 +78,8 @@ public class TutoringSessionApp {
 	    }
 	}
 
-	public void editTutoringSession(User user) {
-		displaySessions(user,sessions);
+	public void editTutoringSession(Tutor tutor) {
+		displaySessions(tutor,sessions);
 
 	    try {
 	    	System.out.print("Enter session ID to edit: ");
@@ -101,7 +97,7 @@ public class TutoringSessionApp {
 	        System.out.print("Enter new capacity: ");
 	        int capacity = Integer.parseInt(scanner.nextLine());
 
-	        tutoringSessionList.editSession((Tutor) user, sessionId, date, startTime, duration, capacity);
+	        tutoringSessionList.editSession(tutor, sessionId, date, startTime, duration, capacity);
 
 	        System.out.println("Session updated successfully!");
 	    } catch (IllegalArgumentException e) {
@@ -111,8 +107,8 @@ public class TutoringSessionApp {
 	    }
 	}
 
-	public void cancelTutoringSession(User user) {
-		displaySessions(user,sessions);
+	public void cancelTutoringSession(Tutor tutor) {
+		displaySessions(tutor,sessions);
 
 	    System.out.print("Enter session ID to cancel: ");
 	    int sessionId = Integer.parseInt(scanner.nextLine());
@@ -125,7 +121,7 @@ public class TutoringSessionApp {
 	    }
 
 	    try {
-	    	tutoringSessionList.cancelSession((Tutor) user, sessionId);
+	    	tutoringSessionList.cancelSession(tutor, sessionId);
 	        System.out.println("Session canceled successfully!");
 	    } catch (IllegalArgumentException e) {
 	        System.out.println("Error: " + e.getMessage());

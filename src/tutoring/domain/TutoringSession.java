@@ -27,28 +27,37 @@ public class TutoringSession {
 	private Subject subject; // When creating session, use subjectId as referral
 	private int duration; // in minutes
 	private Tutor tutor; // When creating session, use tutorId as a referral
+	
 	public TutoringSession(int tutoringSessionID, int availableCapacity, int capacity,
-			String dateStr, String startTimeStr, int duration, Subject subject, Tutor tutor) {
-		DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
-        
-        if(duration<0) {throw new IllegalArgumentException("Duration must be positive");}
-        LocalTime calculatedEnd = startTime.plusMinutes(this.duration);
-        if (!calculatedEnd.isAfter(startTime)) { throw new IllegalArgumentException("Session cannot extend into the next day");}
-        this.date = LocalDate.parse(dateStr, dateFmt);
-        this.startTime = LocalTime.parse(startTimeStr, timeFmt);
-        this.endTime = calculatedEnd;
-        this.duration = duration;
+            String dateStr, String startTimeStr, int duration,
+            Subject subject, Tutor tutor) {
+
+		DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // match your input
+		DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
+		
+		if (duration <= 0) {
+		throw new IllegalArgumentException("Duration must be positive");
+		}
+		
+		this.date = LocalDate.parse(dateStr, dateFmt);
+		this.startTime = LocalTime.parse(startTimeStr, timeFmt);
+		this.duration = duration;
+		
+		LocalTime calculatedEnd = this.startTime.plusMinutes(this.duration);
+		if (!calculatedEnd.isAfter(this.startTime)) {
+		throw new IllegalArgumentException("Session cannot extend into the next day");
+		}
+		this.endTime = calculatedEnd;
 		
 		this.tutoringSessionID = tutoringSessionID;
-		this.bookingList = new ArrayList<Booking>();
-		this.availableCapacity = capacity - bookingList.size();
+		this.bookingList = new ArrayList<>();
 		this.capacity = capacity;
+		this.availableCapacity = capacity - bookingList.size();
 		
-		// subjectId/tutorId is used to refer 
 		this.subject = subject;
 		this.tutor = tutor;
 	}
+
 	
 	public int getTutoringSessionID() { return tutoringSessionID;}
 	// Does not permit the changing of TutoringSessionId

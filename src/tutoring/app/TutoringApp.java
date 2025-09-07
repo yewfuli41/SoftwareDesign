@@ -83,6 +83,8 @@ public class TutoringApp {
 		}
 	}
 
+      
+
 	public void tutorMenu() {
 
 		while (true) {
@@ -96,10 +98,10 @@ public class TutoringApp {
 				int choice = Integer.parseInt(input.nextLine());
 				switch (choice) {
 				case 1:
-					tutoringSessionApp.createTutoringSession(currentUser);
+					tutoringSessionApp.createTutoringSession((Tutor)currentUser);
 					break;
 				case 2:
-					tutoringSessionApp.tutorMenu(currentUser);
+					tutoringSessionApp.tutorMenu((Tutor)currentUser);
 					break;
 				case 3:
 					profileMenu(currentUser);
@@ -152,6 +154,7 @@ public class TutoringApp {
 			}
 		}
 	}
+
 
 	public static void profileMenu(User user) {
 
