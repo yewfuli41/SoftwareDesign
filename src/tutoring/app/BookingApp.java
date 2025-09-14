@@ -218,17 +218,18 @@ public class BookingApp {
 
 	public void printStatistics(double totalHoursSessionsAttend, int totalNumberSessionsAttend,
 			ArrayList<Booking> bookings) {
-		System.out.println("Total Hours of Tutoring Sessions Attend: " + totalHoursSessionsAttend + " hours");
-		System.out.println("Total Number of Tutoring Sessions Attend: " + totalNumberSessionsAttend);
-		System.out.println("----------------Tutoring Sessions Attend-------------------");
+		System.out.println("Total Hours of Confirmed Tutoring Sessions: " + totalHoursSessionsAttend + " hours");
+		System.out.println("Total Number of Confirmed Tutoring Sessions: " + totalNumberSessionsAttend);
+		System.out.println("----------------Confirmed Tutoring Sessions-------------------");
 		if (bookings.size() > 0) {
 			for (int i = 0; i < bookings.size(); i++) {
-				System.out.println("Tutoring Session " + (i + 1) + ": "
+				System.out.println("Booking "+(i+1));
+				System.out.println("Tutoring Session: "
 						+ bookings.get(i).getTutoringSession().getSubject().getSubjectName());
 				System.out.println("Tutor: " + bookings.get(i).getTutoringSession().getTutor().getName());
 			}
 		} else {
-			throw new IllegalArgumentException("No tutoring session attended before.");
+			throw new IllegalArgumentException("No tutoring session is booked before.");
 		}
 
 	}
