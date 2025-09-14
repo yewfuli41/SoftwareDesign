@@ -53,8 +53,8 @@ public class TutoringSessionList implements ITutoringSession {
 			generateNextSessionId(),
 			capacity,
 			capacity,
-			date.toString(),
-			startTime.toString(),
+			date,
+			startTime,
 			duration,
 			subject,
 			tutor
@@ -96,8 +96,8 @@ public class TutoringSessionList implements ITutoringSession {
                 existing.getTutoringSessionID(),
                 existing.getAvailableCapacity(), // preserve current bookings
                 capacity,
-                date.toString(),
-                startTime.toString(),
+                date,
+                startTime,
                 duration,
                 existing.getSubject(),
                 tutor
@@ -135,6 +135,6 @@ public class TutoringSessionList implements ITutoringSession {
                 .filter(s -> s.getTutor().getUserID() == tutorId)
                 .collect(Collectors.toList());
     }
-
+    
 }
 

@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 public class FileUserRepo implements IUserRepo {
-    private String userFile = "C:/Users/yewfu/SCC/SDAssignment/UserData.txt";
+    private String userFile = "UserData.txt";
 
     @Override
     public List<User> findAll() {

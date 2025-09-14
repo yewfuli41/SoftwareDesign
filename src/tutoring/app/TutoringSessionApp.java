@@ -182,6 +182,7 @@ public class TutoringSessionApp {
         // Display results
         displaySessions(user,filtered);
     }
+	
 	public void displaySessions(User user,List<TutoringSession> sessions) {
 	    System.out.println("\n--- Available Sessions ---");
 

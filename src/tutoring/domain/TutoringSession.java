@@ -29,33 +29,30 @@ public class TutoringSession {
 	private Tutor tutor; // When creating session, use tutorId as a referral
 	
 	public TutoringSession(int tutoringSessionID, int availableCapacity, int capacity,
-            String dateStr, String startTimeStr, int duration,
-            Subject subject, Tutor tutor) {
+	        LocalDate date, LocalTime startTime, int duration,
+	        Subject subject, Tutor tutor) {
 
-		DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
-		
-		if (duration <= 0) {
-		throw new IllegalArgumentException("Duration must be positive");
-		}
-		
-		this.date = LocalDate.parse(dateStr, dateFmt);
-		this.startTime = LocalTime.parse(startTimeStr, timeFmt);
-		this.duration = duration;
-		
-		LocalTime calculatedEnd = this.startTime.plusMinutes(this.duration);
-		if (!calculatedEnd.isAfter(this.startTime)) {
-		throw new IllegalArgumentException("Session cannot extend into the next day");
-		}
-		this.endTime = calculatedEnd;
-		
-		this.tutoringSessionID = tutoringSessionID;
-		this.bookingList = new ArrayList<>();
-		this.capacity = capacity;
-		this.availableCapacity = capacity - bookingList.size();
-		
-		this.subject = subject;
-		this.tutor = tutor;
+	    if (duration <= 0) {
+	        throw new IllegalArgumentException("Duration must be positive");
+	    }
+
+	    this.date = date;
+	    this.startTime = startTime;
+	    this.duration = duration;
+
+	    LocalTime calculatedEnd = this.startTime.plusMinutes(this.duration);
+	    if (!calculatedEnd.isAfter(this.startTime)) {
+	        throw new IllegalArgumentException("Session cannot extend into the next day");
+	    }
+	    this.endTime = calculatedEnd;
+
+	    this.tutoringSessionID = tutoringSessionID;
+	    this.bookingList = new ArrayList<>();
+	    this.capacity = capacity;
+	    this.availableCapacity = capacity - bookingList.size();
+
+	    this.subject = subject;
+	    this.tutor = tutor;
 	}
 
 	

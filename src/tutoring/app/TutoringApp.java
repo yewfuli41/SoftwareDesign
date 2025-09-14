@@ -60,6 +60,8 @@ public class TutoringApp {
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Please enter a valid number!");
+			} catch (IllegalArgumentException ex) {
+				System.out.println(ex.getMessage());
 			}
 		}
 
@@ -81,6 +83,7 @@ public class TutoringApp {
 		} else {
 			throw new IllegalArgumentException("Invalid email or password.");
 		}
+		
 	}
 
       
@@ -124,8 +127,9 @@ public class TutoringApp {
 			System.out.println("1. Search Sessions");
 			System.out.println("2. Book a Session");
 			System.out.println("3. Manage Bookings");
-			System.out.println("4. Profile");
-			System.out.println("5. Logout");
+			System.out.println("4. Bookings Statistics");
+			System.out.println("5. Profile");
+			System.out.println("6. Logout");
 			System.out.print("Enter choice: ");
 			try {
 				int choice = Integer.parseInt(input.nextLine());
@@ -141,9 +145,12 @@ public class TutoringApp {
 					bookingApp.studentManageBookings();
 					break;
 				case 4:
-					profileMenu(currentUser);
+					bookingApp.bookingsStatisticsMenu((Student)currentUser);
 					break;
 				case 5:
+					profileMenu(currentUser);
+					break;
+				case 6:
 					currentUser = userApp.logout();
 					return;
 				default:

@@ -1,0 +1,5 @@
+1,Mathematics,Learn algebra, calculus, and geometry
+2,Physics,Covers mechanics, electricity, and magnetism
+3,Computer Science,Introduction to programming and algorithms
+4,Chemistry,Covers organic and inorganic chemistry
+5,English,Improve grammar, writing, and speaking skills
