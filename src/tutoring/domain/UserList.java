@@ -63,10 +63,9 @@ public class UserList implements IUser {
         users.remove(user);
         userRepo.saveAll(users);
     }
-    public boolean checkPassword(String password) {
-    	for(int i=0;i<users.size();i++) 
-    		if(users.get(i).getPassword().equals(password))
-    			return true;
+    public boolean checkPassword(String password, User user) {
+    	if(user.getPassword().equals(password))
+    		return true;
     	return false;
 
     }
