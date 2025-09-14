@@ -1,6 +1,7 @@
 
 package tutoring.domain;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 import tutoring.persistence.IBookingRepo;
@@ -8,12 +9,12 @@ import tutoring.persistence.RepoMain;
 
 public class BookingList implements IBooking {
 	RepoMain factory;
-    private ArrayList<Booking> bookings;
+    private List<Booking> bookings;
     private final IBookingRepo bookingRepo;
     public BookingList() {
     	this.factory = new RepoMain();
-        this.bookings = new ArrayList<>();
         this.bookingRepo = factory.getBookingRepo();
+        bookings = bookingRepo.loadAllBookings();
     }
 
     /// Book a tutoring session
@@ -79,7 +80,7 @@ public class BookingList implements IBooking {
         ArrayList<Booking> studentBookings = new ArrayList<>();
         for (Booking booking : bookings) 
         {
-            if (booking.getStudent().equals(student))
+            if (booking.getStudent().getName().equals(student.getName()))
             {
                 studentBookings.add(booking);
             }
@@ -87,8 +88,10 @@ public class BookingList implements IBooking {
         return studentBookings;
     }
     
-    public ArrayList<Booking> getAllBookings() {
+    public List<Booking> getAllBookings() {
         return bookings;
     }
+    
+    
 }
 

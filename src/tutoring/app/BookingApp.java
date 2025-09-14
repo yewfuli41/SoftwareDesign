@@ -7,12 +7,14 @@ import tutoring.domain.*;
 import tutoring.persistence.*;
 public class BookingApp {
 	private Scanner scanner;
+	private BookingController controller;
 	private ITutoringSession tutoringSessionList;
 	private IBooking bookingList;
 	public BookingApp() {
 		scanner = new Scanner(System.in);
 		tutoringSessionList = new TutoringSessionList();
 		bookingList = new BookingList();
+		controller = new BookingController();
 	}
 	
 	 // ---------------- Student Booking ----------------
@@ -159,5 +161,71 @@ public class BookingApp {
         } else {
             System.out.println("Invalid action.");
         }
+    }
+    public void bookingsStatisticsMenu(Student student) {
+    	try {
+	    	while(true) {
+	    		controller.setStudentBookings(student);
+	    		controller.filterConfirmedBookings();
+	    		double totalHoursSessionsAttend = 0;
+	        	int totalNumberSessionsAttend = 0;
+		    	System.out.println("------------Statistics--------------");
+		    	System.out.println("Filter by:");
+		    	System.out.println("1.Subject");
+		    	System.out.println("2.Month");
+		    	System.out.println("3.Tutor");
+		    	System.out.println("4.Exit");
+		    	System.out.print("choice:");
+		    	try {
+		    		int choice = scanner.nextInt();
+		    		scanner.nextLine();
+		    		switch(choice) {
+		    			case 1:
+		    				System.out.print("Enter subject name:");
+		    		    	String subject = scanner.nextLine().trim().toLowerCase();
+		    				controller.filterBookingsBySubject(subject);
+		    				break;
+		    			case 2:
+		    				System.out.print("Enter month:");
+		    		    	String month = scanner.nextLine().trim();
+		    				controller.filterBookingsByDate(month);
+		    				break;
+		    			case 3:
+		    				System.out.print("Enter tutor name:");
+		    		    	String tutor = scanner.nextLine().trim().toLowerCase();
+		    				controller.filterBookingsByTutor(tutor);
+		    				break;
+		    			case 4:
+		    				return;
+		    			default:
+		    				System.out.println("Invalid choice. Try again!");
+		    				
+		    		}
+		    	} catch (NumberFormatException ex) {
+		    		System.out.println("Please enter a valid number!");
+		    	}
+		    	ArrayList<Booking> bookings = controller.getStudentBookings();
+		    	totalHoursSessionsAttend = controller.calculateTotalHoursSessionsAttended();
+				totalNumberSessionsAttend = bookings.size();
+				printStatistics(totalHoursSessionsAttend,totalNumberSessionsAttend,bookings);
+	    	}
+    	}catch(IllegalArgumentException ex) {
+    		System.out.println(ex.getMessage());
+    	}
+    }
+   
+    public void printStatistics(double totalHoursSessionsAttend,int totalNumberSessionsAttend,ArrayList<Booking> bookings) {
+    	System.out.println("Total Hours of Tutoring Sessions Attend: "+totalHoursSessionsAttend+" hours");
+    	System.out.println("Total Number of Tutoring Sessions Attend: "+totalNumberSessionsAttend);
+    	System.out.println("----------------Tutoring Sessions Attend-------------------");
+    	if(bookings.size()>0) {
+	    	for(int i=0;i<bookings.size();i++) {
+	    		System.out.println("Tutoring Session "+(i+1)+": "+bookings.get(i).getTutoringSession().getSubject().getSubjectName());
+	    		System.out.println("Tutor: "+bookings.get(i).getTutoringSession().getTutor().getName());
+	    	}
+    	}else {
+    		throw new IllegalArgumentException("No tutoring session attended before.");
+    	}
+    	
     }
 }
