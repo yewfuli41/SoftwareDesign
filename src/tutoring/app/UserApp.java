@@ -101,7 +101,7 @@ public class UserApp {
 	public void changePassword(User user) {
 		System.out.print("Current Password: ");
 		String currentPassword = input.nextLine();
-		if (!userList.checkPassword(currentPassword)) {
+		if (!userList.checkPassword(currentPassword,user)) {
 			throw new IllegalArgumentException("Wrong password!");
 		}
 		System.out.print("New Password: ");
