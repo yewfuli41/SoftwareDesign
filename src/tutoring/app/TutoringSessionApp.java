@@ -12,11 +12,13 @@ public class TutoringSessionApp {
 	private Scanner scanner;
 	private IUser userList;
 	private ITutoringSession tutoringSessionList;
+	private ISubject subjectList;
 	private List<TutoringSession> sessions;
 	public TutoringSessionApp() {
 		scanner = new Scanner(System.in);
 		userList = new UserList();
 		tutoringSessionList = new TutoringSessionList();
+		subjectList = new SubjectList();
 		sessions = tutoringSessionList.getAllSessions();
 	}
 	// ---------------- Tutor Menu ----------------
@@ -50,7 +52,7 @@ public class TutoringSessionApp {
 			// Gather inputs
 			System.out.print("Enter subject name: ");
 	        String subjectName = scanner.nextLine();
-	        Subject subject = new Subject(0, subjectName, "");
+	        Subject subject = subjectList.createSubject(subjectName);
 
 	        System.out.print("Enter session date (dd-MM-yyyy): ");
 	        LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
