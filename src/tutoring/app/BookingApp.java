@@ -218,6 +218,7 @@ public class BookingApp {
 
 	public void printStatistics(double totalHoursSessionsAttend, int totalNumberSessionsAttend,
 			ArrayList<Booking> bookings) {
+		System.out.println("--------------------Summary Report----------------------------");
 		System.out.println("Total Hours of Confirmed Tutoring Sessions: " + totalHoursSessionsAttend + " hours");
 		System.out.println("Total Number of Confirmed Tutoring Sessions: " + totalNumberSessionsAttend);
 		System.out.println("----------------Confirmed Tutoring Sessions-------------------");
