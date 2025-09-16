@@ -11,69 +11,57 @@ public class BookingApp {
 	private BookingController controller;
 	private ITutoringSession tutoringSessionList;
 	private IBooking bookingList;
+	private TutoringSessionApp tsapp;
 
 	public BookingApp() {
 		scanner = new Scanner(System.in);
 		tutoringSessionList = new TutoringSessionList();
 		bookingList = new BookingList();
 		controller = new BookingController();
+		tsapp = new TutoringSessionApp();
+		
 	}
 
 	// ---------------- Student Booking ----------------
-	public void studentBookingMenu() {
-		System.out.print("Enter your name: ");
-		String studentName = scanner.nextLine();
-		Student student = new Student(studentName, "", "", 0);
-
-		System.out.print("Enter subject to search: ");
-		String keyword = scanner.nextLine();
-
-		// Search sessions
-		var availableSessions = tutoringSessionList.getSessions(keyword);
-		if (availableSessions.isEmpty()) {
-			System.out.println("No sessions available for: " + keyword);
-			return;
-		}
-
-		System.out.println("Available sessions:");
-		for (int i = 0; i < availableSessions.size(); i++) {
-			var s = availableSessions.get(i);
-			System.out.println((i + 1) + ". " + s.getSubject().getSubjectName() + " | Date: " + s.getDate()
-					+ " | Timeslot: " + s.getTimeslot() + " | Duration: " + s.getDuration());
-		}
-
-		System.out.print("Select session number to book: ");
-		int selectedIndex = scanner.nextInt() - 1;
-		scanner.nextLine();
-
-		if (selectedIndex < 0 || selectedIndex >= availableSessions.size()) {
-			System.out.println("Invalid selection.");
-			return;
-		}
-
-		TutoringSession selectedSession = availableSessions.get(selectedIndex);
-
-		if (selectedSession.getAvailableCapacity() <= 0) {
-			System.out.println("Session is full. Cannot book.");
-			return;
-		}
-
-		Booking booking = bookingList.bookingSession(selectedSession);
-		booking.setStudent(student);
-		bookingList.confirmBooking(booking);
-		student.getSessionsAttended().add(booking);
-
-		// Reduce available seats
-		selectedSession.setAvailableCapacity(selectedSession.getAvailableCapacity() - 1);
-
-		System.out.println(
-				"Booking confirmed for " + student.getName() + " in " + selectedSession.getSubject().getSubjectName());
+	public void studentBookingMenu(Student student) {
+		tsapp.searchTutoringSessions(student);
+		// Search sessions using subject name (1, Mathematics. 2, Physics. 3, Computer Science. 4, Chemistry. 5, English.
+		/*
+		1,Mathematics,Learn algebra, calculus, and geometry
+		2,Physics,Covers mechanics, electricity, and magnetism
+		3,Computer Science,Introduction to programming and algorithms
+		4,Chemistry,Covers organic and inorganic chemistry
+		5,English,Improve grammar, writing, and speaking skills
+		 */
+		try {
+			System.out.print("Select session ID to book: ");
+			int selectedID = scanner.nextInt();
+			scanner.nextLine();
+	
+			// final step of create booking, this step will throw errors 
+			Booking booking = bookingList.bookingSession(selectedID,student);
+			System.out.println("Confirm booking?");
+			String decision = scanner.nextLine();
+			if (decision.trim().toUpperCase().equals("Y")) {
+				bookingList.confirmBooking(booking);
+				System.out.println(
+						"Booking confirmed for " + student.getName() + " in " + booking.getTutoringSession().getSubject().getSubjectName()
+						+" under Mr./Mrs. "+ booking.getTutoringSession().getTutor().getName());
+			} else {
+				System.out.println("Booking on pending, go to Manage Booking page to confirm the registration.");
+				return;
+			}
+		} catch (Exception e) {
+	    	System.out.println(e.getMessage());
+	    }
 	}
 
 	// ---------------- Student Manage Bookings ----------------
 	public void studentManageBookings(Student student) {
+
 		controller.setStudentBookings(student);
 		var bookings = controller.getStudentBookings();
+
 		if (bookings.isEmpty()) {
 			throw new IllegalArgumentException("No bookings found");
 		}

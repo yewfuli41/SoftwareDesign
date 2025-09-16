@@ -9,7 +9,9 @@ public class BookingController {
 		bookingList = new BookingList();
 		studentBookings = new ArrayList<>();
 	}
-	
+	public void checkBookings() {
+		
+	}
 	public void filterConfirmedBookings(){
 		studentBookings = new ArrayList<>(studentBookings.stream()
                 .filter(booking -> booking.getStatus().toLowerCase().equals("confirmed"))

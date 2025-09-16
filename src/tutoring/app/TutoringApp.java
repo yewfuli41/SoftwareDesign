@@ -139,10 +139,10 @@ public class TutoringApp {
 					tutoringSessionApp.searchTutoringSessions(currentUser);
 					break;
 				case 2:
-					bookingApp.studentBookingMenu();
+					bookingApp.studentBookingMenu((Student) currentUser);
 					break;
 				case 3:
-					bookingApp.studentManageBookings((Student)currentUser);
+					bookingApp.studentManageBookings((Student) currentUser);
 					break;
 				case 4:
 					bookingApp.bookingsStatisticsMenu((Student)currentUser);

@@ -7,7 +7,7 @@ import java.util.List;
 public interface IBooking {
     
     // Book a tutoring session
-    Booking bookingSession(TutoringSession session);
+    Booking bookingSession(int selectedSessionId, Student student);
     
     // Confirm a booking
     void confirmBooking(Booking booking);
