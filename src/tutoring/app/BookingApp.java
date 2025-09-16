@@ -71,15 +71,11 @@ public class BookingApp {
 	}
 
 	// ---------------- Student Manage Bookings ----------------
-	public void studentManageBookings() {
-		System.out.print("Enter your name: ");
-		String studentName = scanner.nextLine();
-		Student student = new Student(studentName, "", "", 0);
-
-		var bookings = bookingList.getBookings(student);
+	public void studentManageBookings(Student student) {
+		controller.setStudentBookings(student);
+		var bookings = controller.getStudentBookings();
 		if (bookings.isEmpty()) {
-			System.out.println("No bookings found.");
-			return;
+			throw new IllegalArgumentException("No bookings found");
 		}
 
 		System.out.println("Your bookings:");

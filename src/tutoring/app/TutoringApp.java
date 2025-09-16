@@ -142,7 +142,7 @@ public class TutoringApp {
 					bookingApp.studentBookingMenu();
 					break;
 				case 3:
-					bookingApp.studentManageBookings();
+					bookingApp.studentManageBookings((Student)currentUser);
 					break;
 				case 4:
 					bookingApp.bookingsStatisticsMenu((Student)currentUser);
@@ -158,6 +158,8 @@ public class TutoringApp {
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Please enter a valid number!");
+			} catch(IllegalArgumentException ex) {
+				System.out.println(ex.getMessage());
 			}
 		}
 	}
