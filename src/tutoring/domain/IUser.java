@@ -1,6 +1,4 @@
-
 package tutoring.domain;
-import java.util.List;
 public interface IUser {
 	public void updateUser(User user);
 	public boolean checkPassword(String password,User user);

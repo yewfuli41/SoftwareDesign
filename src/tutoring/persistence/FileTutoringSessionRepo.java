@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class FileTutoringSessionRepo implements ITutoringSessionRepo {
     private String sessionFile = "TutoringSessionData.txt";
@@ -99,6 +100,20 @@ public class FileTutoringSessionRepo implements ITutoringSessionRepo {
                 .findFirst()
                 .orElse(null);
     }
+    
+    @Override
+    public List<TutoringSession> findBySubjectName(String subjectName) {
+    	List<TutoringSession> sessions = loadAllSessions();
+        List<TutoringSession> filteredSessions = new ArrayList<>();
+
+        for (TutoringSession s : sessions) {
+            if (s.getSubject().getSubjectName().equals(subjectName)) {
+                filteredSessions.add(s);
+            }
+        }
+        return filteredSessions;
+    }
+
 
     @Override
     public void addSession(TutoringSession session) {

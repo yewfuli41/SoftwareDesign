@@ -121,6 +121,12 @@ public class TutoringSessionList implements ITutoringSession {
     public TutoringSession getSessionById(int sessionId) {
         return sessionRepo.findById(sessionId);
     }
+    
+    // students will search for tutoring sessions with subject name
+    @Override
+    public List<TutoringSession> getSessionBySubject(String subjectName) {
+    	return sessionRepo.findBySubjectName(subjectName);
+    }
 
     // Get all sessions
     @Override

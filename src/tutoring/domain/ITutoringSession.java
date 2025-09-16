@@ -16,6 +16,7 @@ public interface ITutoringSession {
 	public void editSession(Tutor tutor, int sessionId, LocalDate date, LocalTime startTime,int duration, int capacity);
 	public void cancelSession(Tutor tutor, int sessionId);
 	public TutoringSession getSessionById(int sessionId); // Returns session of that user account
+	public List<TutoringSession> getSessionBySubject(String subjectName);
 	public List<TutoringSession> getAllSessions();
 	public List<TutoringSession> getSessionsByTutor(int tutorId);
 	public TutoringSession createTutoringSession(Tutor tutor, Subject subject, LocalDate date, LocalTime startTime, int duration, int capacity);

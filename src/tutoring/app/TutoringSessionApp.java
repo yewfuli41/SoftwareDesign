@@ -200,7 +200,8 @@ public class TutoringSessionApp {
 	                      " by " + s.getTutor().getName() +
 	                      " | Capacity: " + s.getCapacity() +
 	                      " | Date: " + s.getDate() +
-	                      " | Time: " + s.getStartTime() + " - " + s.getEndTime()
+	                      " | Time: " + s.getStartTime() + " - " + s.getEndTime() +
+	                      " | Available Seats: " + s.getAvailableCapacity()
 	                  );
 	              }
 	          }
