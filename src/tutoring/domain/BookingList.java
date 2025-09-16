@@ -122,7 +122,7 @@ public class BookingList implements IBooking {
         ArrayList<Booking> studentBookings = new ArrayList<>();
         for (Booking booking : bookings) 
         {
-            if (booking.getStudent().getName().equals(student.getName()))
+            if (booking.getStudent().getUserID()==student.getUserID())
             {
                 studentBookings.add(booking);
             }
