@@ -49,7 +49,6 @@ public class FileTutoringSessionRepo implements ITutoringSessionRepo {
                 int duration = Integer.parseInt(parts[5]);
                 int capacity = Integer.parseInt(parts[6]);
                 int available = Integer.parseInt(parts[7]);
-
                 Tutor tutor = userRepo.findTutorById(tutorId);
                 Subject subject = subjectRepo.findById(subjectId);
 

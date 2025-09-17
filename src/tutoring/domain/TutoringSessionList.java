@@ -63,7 +63,9 @@ public class TutoringSessionList implements ITutoringSession {
 		sessionRepo.addSession(session);
 		return session;
 	}
-
+    public void editSessionRepo(TutoringSession session) {
+    	 sessionRepo.updateSession(session);
+    }
     @Override
     public void editSession(Tutor tutor, int sessionId, LocalDate date, LocalTime startTime,int duration, int capacity) {
         TutoringSession existing = sessionRepo.findById(sessionId);

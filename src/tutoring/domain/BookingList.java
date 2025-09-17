@@ -33,27 +33,8 @@ public class BookingList implements IBooking {
     
     // Book a tutoring session
     @Override
-    public Booking bookingSession(int selectedSessionId, Student student) {
-        // reload latest bookings to avoid stale data
-        bookings = bookingRepo.loadAllBookings();
-        TutoringSession selectedSession = tutoringSessionList.getSessionById(selectedSessionId);
-        if (selectedSession == null) {
-            throw new IllegalArgumentException("Invalid session ID selected!");
-        }
-
-        // Prevent double booking
-        boolean alreadyBooked = bookings.stream()
-            .anyMatch(b -> b.getTutoringSession().getTutoringSessionID() == selectedSession.getTutoringSessionID()
-                    && b.getStudent().getUserID() == student.getUserID());
-        if (alreadyBooked) {
-            throw new IllegalArgumentException("Student already booked this session");
-        }
-
-        // Check capacity
-        if (selectedSession.getAvailableCapacity() <= 0) {
-            throw new IllegalArgumentException("Session is full");
-        }
-
+    public Booking bookingSession(TutoringSession selectedSession, Student student) {
+       
         // Create new booking
         LocalDate bookingDate = LocalDate.now();
         Booking booking = new Booking(
@@ -103,6 +84,7 @@ public class BookingList implements IBooking {
         {
             if (bookings.get(i).getBookingID() == booking.getBookingID()) {
                 bookings.set(i, booking); // replace with updated booking
+                bookingRepo.updateBooking(booking);
                 return;
             }
         }
@@ -113,6 +95,7 @@ public class BookingList implements IBooking {
     public void deleteBookings(Booking booking) 
     {
         bookings.remove(booking);
+        bookingRepo.deleteBooking(booking.getBookingID());
     }
 
     // Retrieve bookings for a specific student

@@ -14,12 +14,16 @@ public class TutoringSessionApp {
 	private ITutoringSession tutoringSessionList;
 	private ISubject subjectList;
 	private List<TutoringSession> sessions;
+	
 	public TutoringSessionApp() {
 		scanner = new Scanner(System.in);
 		userList = new UserList();
 		tutoringSessionList = new TutoringSessionList();
 		subjectList = new SubjectList();
 		sessions = tutoringSessionList.getAllSessions();
+	}
+	public void setSessions() {
+		this.sessions = tutoringSessionList.getAllSessions();;
 	}
 	// ---------------- Tutor Menu ----------------
     public void tutorMenu(Tutor tutor) {
@@ -147,9 +151,7 @@ public class TutoringSessionApp {
             case 1: // Subject
                 System.out.print("Enter subject name: ");
                 String subjectName = scanner.nextLine().trim().toLowerCase();
-                filtered = sessions.stream()
-                    .filter(s -> s.getSubject().getSubjectName().toLowerCase().contains(subjectName))
-                    .toList();
+                filtered = filterTutoringSessionsBySubject(subjectName);
                 break;
 
             case 2: // Date
@@ -178,7 +180,8 @@ public class TutoringSessionApp {
 
             case 5: // Show all
             default:
-                break;
+            	throw new IllegalArgumentException("Please enter valid number!");
+            	
         }
 
         // Display results
@@ -190,7 +193,7 @@ public class TutoringSessionApp {
 
 	    if (userList.isStudent(user)) {
 	    	  if (sessions.isEmpty()) {
-	              System.out.println("No sessions found matching your criteria.");
+	              throw new IllegalArgumentException("No sessions found matching your criteria.");
 	          } else {
 	              System.out.println("\nSearch Results:");
 	              for (TutoringSession s : sessions) {
@@ -229,5 +232,10 @@ public class TutoringSessionApp {
 	            s.getAvailableCapacity(),
 	            s.getCapacity()
 	    );
-	}	
+	}
+	public List<TutoringSession> filterTutoringSessionsBySubject(String subjectName){
+		return sessions.stream()
+                .filter(s -> s.getSubject().getSubjectName().toLowerCase().contains(subjectName.toLowerCase()))
+                .toList();
+	}
 }

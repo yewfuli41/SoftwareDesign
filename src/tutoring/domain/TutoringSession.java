@@ -37,7 +37,7 @@ public class TutoringSession {
 
 	    this.date = date;
 	    this.startTime = startTime;
-	    this.duration = duration;
+	    setDuration(duration);
 
 	    LocalTime calculatedEnd = this.startTime.plusMinutes(this.duration);
 	    if (!calculatedEnd.isAfter(this.startTime)) {
@@ -47,8 +47,8 @@ public class TutoringSession {
 
 	    this.tutoringSessionID = tutoringSessionID;
 	    this.bookingList = new ArrayList<>();
-	    this.capacity = capacity;
-	    this.availableCapacity = capacity - bookingList.size();
+	    setCapacity(capacity);
+	    setAvailableCapacity(availableCapacity);
 
 	    this.subject = subject;
 	    this.tutor = tutor;
