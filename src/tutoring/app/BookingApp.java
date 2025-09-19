@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 import tutoring.domain.*;
-import tutoring.persistence.*;
 
 public class BookingApp {
-	private Scanner scanner;
+	private Scanner input;
 	private BookingController controller;
 	private TutoringSessionApp tsapp;
 
 	public BookingApp() {
-		scanner = new Scanner(System.in);
+		input = new Scanner(System.in);
 		controller = new BookingController();
 		tsapp = new TutoringSessionApp();
 		
@@ -32,13 +31,13 @@ public class BookingApp {
 			 */
 		
 			System.out.print("Select session ID to book: ");
-			int selectedID = scanner.nextInt();
-			scanner.nextLine();
+			int selectedID = input.nextInt();
+			input.nextLine();
 	
 			// final step of create booking, this step will throw errors 
 			Booking booking = controller.createBooking(selectedID,student);
 			System.out.println("Confirm booking?(Y/N)");
-			String decision = scanner.nextLine();
+			String decision = input.nextLine();
 			if (decision.trim().toUpperCase().equals("Y")) {
 				confirmBooking(booking);
 			} else {
@@ -65,8 +64,8 @@ public class BookingApp {
 		System.out.print("Choose action: ");
 		
 		try {
-			int action = scanner.nextInt();
-			scanner.nextLine();
+			int action = input.nextInt();
+			input.nextLine();
 			switch(action) {
 				case 1:
 					controller.cancelBooking(selectedBooking);
@@ -105,8 +104,8 @@ public class BookingApp {
 	}
 	public TutoringSession selectSession(ArrayList<TutoringSession> freeSlots) {
 		System.out.print("Select new session number to change: ");
-		int newIndex = scanner.nextInt() - 1;
-		scanner.nextLine();
+		int newIndex = input.nextInt() - 1;
+		input.nextLine();
 		if (newIndex < 0 || newIndex >= freeSlots.size()) {
 			throw new IllegalArgumentException("Invalid selection.");
 		}
@@ -144,8 +143,8 @@ public class BookingApp {
 	}
 	public Booking selectBooking(ArrayList<Booking> bookings) {
 		System.out.print("Select booking number to manage: ");
-		int selectedIndex = scanner.nextInt() - 1;
-		scanner.nextLine();
+		int selectedIndex = input.nextInt() - 1;
+		input.nextLine();
 
 		if (selectedIndex < 0 || selectedIndex >= bookings.size()) {
 			throw new IllegalArgumentException("Invalid selection.");
@@ -168,22 +167,22 @@ public class BookingApp {
 			System.out.println("4.Exit");
 			System.out.print("choice:");
 			try {
-				int choice = scanner.nextInt();
-				scanner.nextLine();
+				int choice = input.nextInt();
+				input.nextLine();
 				switch (choice) {
 				case 1:
 					System.out.print("Enter subject name:");
-					String subject = scanner.nextLine().trim().toLowerCase();
+					String subject = input.nextLine().trim().toLowerCase();
 					controller.filterBookingsBySubject(subject);
 					break;
 				case 2:
 					System.out.print("Enter month:");
-					String month = scanner.nextLine().trim();
+					String month = input.nextLine().trim();
 					controller.filterBookingsByDate(month);
 					break;
 				case 3:
 					System.out.print("Enter tutor name:");
-					String tutor = scanner.nextLine().trim().toLowerCase();
+					String tutor = input.nextLine().trim().toLowerCase();
 					controller.filterBookingsByTutor(tutor);
 					break;
 				case 4:

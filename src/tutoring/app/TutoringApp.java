@@ -13,7 +13,6 @@ import tutoring.domain.*;
 import tutoring.persistence.*;
 
 public class TutoringApp {
-	private static IUser userList;
 	private static UserApp userApp;
 	private static BookingApp bookingApp;
 	private static TutoringSessionApp tutoringSessionApp;
@@ -21,7 +20,6 @@ public class TutoringApp {
 	private static User currentUser;
 
 	public TutoringApp() {
-		this.userList = new UserList();
 		this.input = new Scanner(System.in);
 		this.userApp = new UserApp();
 		this.tutoringSessionApp = new TutoringSessionApp();

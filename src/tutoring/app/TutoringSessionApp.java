@@ -7,16 +7,15 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 import tutoring.domain.*;
-import tutoring.persistence.*;
 public class TutoringSessionApp {
-	private Scanner scanner;
+	private Scanner input;
 	private IUser userList;
 	private ITutoringSession tutoringSessionList;
 	private ISubject subjectList;
 	private List<TutoringSession> sessions;
 	
 	public TutoringSessionApp() {
-		scanner = new Scanner(System.in);
+		input = new Scanner(System.in);
 		userList = new UserList();
 		tutoringSessionList = new TutoringSessionList();
 		subjectList = new SubjectList();
@@ -34,8 +33,8 @@ public class TutoringSessionApp {
             System.out.println("2. Cancel Session");
             System.out.println("0. Back");
             System.out.print("Enter choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine();
+            choice = input.nextInt();
+            input.nextLine();
 
             switch (choice) {
                 case 1:
@@ -55,22 +54,22 @@ public class TutoringSessionApp {
 		try {
 			// Gather inputs
 			System.out.print("Enter subject name: ");
-	        String subjectName = scanner.nextLine();
+	        String subjectName = input.nextLine();
 	        Subject subject = subjectList.createSubject(subjectName);
 
 	        System.out.print("Enter session date (dd-MM-yyyy): ");
-	        LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	        LocalDate date = LocalDate.parse(input.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
 	        System.out.print("Enter start time (HH:mm): ");
-	        LocalTime startTime = LocalTime.parse(scanner.nextLine().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+	        LocalTime startTime = LocalTime.parse(input.nextLine().trim(), DateTimeFormatter.ofPattern("HH:mm"));
 
 	        System.out.print("Enter duration (minutes): ");
-	        int duration = scanner.nextInt();
-	        scanner.nextLine();
+	        int duration = input.nextInt();
+	        input.nextLine();
 
 	        System.out.print("Enter capacity: ");
-	        int capacity = scanner.nextInt();
-	        scanner.nextLine();
+	        int capacity = input.nextInt();
+	        input.nextLine();
 
 	        // Call domain service
 	        TutoringSession session = tutoringSessionList.createTutoringSession(
@@ -89,19 +88,19 @@ public class TutoringSessionApp {
 
 	    try {
 	    	System.out.print("Enter session ID to edit: ");
-	        int sessionId = Integer.parseInt(scanner.nextLine());
+	        int sessionId = Integer.parseInt(input.nextLine());
 
 	        System.out.print("Enter new date (dd-MM-yyyy): ");
-	        LocalDate date = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	        LocalDate date = LocalDate.parse(input.nextLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
 	        System.out.print("Enter new start time (HH:mm): ");
-	        LocalTime startTime = LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+	        LocalTime startTime = LocalTime.parse(input.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
 
 	        System.out.print("Enter new duration (minutes): ");
-	        int duration = Integer.parseInt(scanner.nextLine());
+	        int duration = Integer.parseInt(input.nextLine());
 
 	        System.out.print("Enter new capacity: ");
-	        int capacity = Integer.parseInt(scanner.nextLine());
+	        int capacity = Integer.parseInt(input.nextLine());
 
 	        tutoringSessionList.editSession(tutor, sessionId, date, startTime, duration, capacity);
 
@@ -117,7 +116,7 @@ public class TutoringSessionApp {
 		displaySessions(tutor,sessions);
 
 	    System.out.print("Enter session ID to cancel: ");
-	    int sessionId = Integer.parseInt(scanner.nextLine());
+	    int sessionId = Integer.parseInt(input.nextLine());
 	        
 	    // Check if session exists first hand
 	    TutoringSession session = tutoringSessionList.getSessionById(sessionId);
@@ -142,21 +141,21 @@ public class TutoringSessionApp {
         System.out.println("4. Timeslot");
         System.out.println("5. Show All");
         System.out.print("Enter choice: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
+        int choice = input.nextInt();
+        input.nextLine(); // consume newline
 
         List<TutoringSession> filtered = new ArrayList<>(sessions);
 
         switch (choice) {
             case 1: // Subject
                 System.out.print("Enter subject name: ");
-                String subjectName = scanner.nextLine().trim().toLowerCase();
+                String subjectName = input.nextLine().trim().toLowerCase();
                 filtered = filterTutoringSessionsBySubject(subjectName);
                 break;
 
             case 2: // Date
                 System.out.print("Enter date (yyyy-MM-dd): ");
-                String dateStr = scanner.nextLine().trim();
+                String dateStr = input.nextLine().trim();
                 filtered = sessions.stream()
                     .filter(s -> s.getDate().toString().equals(dateStr))
                     .toList();
@@ -164,7 +163,7 @@ public class TutoringSessionApp {
 
             case 3: // Tutor
                 System.out.print("Enter tutor name: ");
-                String tutorName = scanner.nextLine().trim().toLowerCase();
+                String tutorName = input.nextLine().trim().toLowerCase();
                 filtered = sessions.stream()
                     .filter(s -> s.getTutor().getName().toLowerCase().contains(tutorName))
                     .toList();
@@ -172,7 +171,7 @@ public class TutoringSessionApp {
 
             case 4: // Timeslot (start time only)
                 System.out.print("Enter time (HH:mm): ");
-                String timeStr = scanner.nextLine().trim();
+                String timeStr = input.nextLine().trim();
                 filtered = sessions.stream()
                     .filter(s -> s.getStartTime().toString().equals(timeStr))
                     .toList();
@@ -220,17 +219,17 @@ public class TutoringSessionApp {
 	/**
 	 * Format session details for display
 	*/
-	public String formatSession(TutoringSession s) {
+	public String formatSession(TutoringSession sessions) {
 	    return String.format(
 	    		"ID: %d | Tutor: %s | Subject: %s | Date: %s | Start: %s | Duration: %d min | Capacity: %d/%d",
-	    		s.getTutoringSessionID(),
-	            s.getTutor().getName(),
-	            s.getSubject().getSubjectName(),
-	            s.getDate(),
-	            s.getStartTime(),
-	            s.getDuration(),
-	            s.getAvailableCapacity(),
-	            s.getCapacity()
+	    		sessions.getTutoringSessionID(),
+	    		sessions.getTutor().getName(),
+	    		sessions.getSubject().getSubjectName(),
+	    		sessions.getDate(),
+	    		sessions.getStartTime(),
+	    		sessions.getDuration(),
+	    		sessions.getAvailableCapacity(),
+	    		sessions.getCapacity()
 	    );
 	}
 	public List<TutoringSession> filterTutoringSessionsBySubject(String subjectName){
